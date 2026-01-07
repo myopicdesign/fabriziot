@@ -1,5 +1,5 @@
 /***********************
- * FORM_ENDPOINT
+ * FORM_ENDPOINT (GOOGLE APPS SCRIPT WEB APP /exec)
  ***********************/
 const FORM_ENDPOINT =
   "https://script.google.com/macros/s/AKfycbw2BWkNpueif2Myy0odSraxu9srG2ZGT3s_HB_RMtWVs31bf-ob5ITv6bq2pXxSH3CPNg/exec";
@@ -53,21 +53,29 @@ angular
 
     $scope.cards = cardTypes.slice();
 
-    $scope.cardDestroyed = (i) => $scope.cards.splice(i, 1);
+    $scope.cardDestroyed = function (index) {
+      $scope.cards.splice(index, 1);
+    };
 
-    $scope.addCard = () =>
-      $scope.cards.unshift(
-        angular.copy(cardTypes[Math.floor(Math.random() * cardTypes.length)])
-      );
+    $scope.addCard = function () {
+      const newCard = cardTypes[Math.floor(Math.random() * cardTypes.length)];
+      $scope.cards.unshift(angular.copy(newCard));
+    };
 
-    $scope.cardSwipedLeft = $scope.addCard;
-    $scope.cardSwipedRight = $scope.addCard;
+    $scope.cardSwipedLeft = function () {
+      $scope.addCard();
+    };
+    $scope.cardSwipedRight = function () {
+      $scope.addCard();
+    };
 
-    $scope.openCard = (c) => c?.image && openLightbox(c.image);
+    $scope.openCard = function (card) {
+      if (card && card.image) openLightbox(card.image);
+    };
   });
 
 /***********************
- * EMOJI ROTARY SLIDER (APPROVATO - COMPLETO con DRAG + SNAP)
+ * EMOJI ROTARY SLIDER (APPROVATO)
  ***********************/
 (function initEmojiRotary() {
   const angleStage = document.getElementById("angleStage");
@@ -75,18 +83,12 @@ angular
   const centerLabelEl = document.getElementById("centerLabel");
   if (!angleStage || !angleList || !centerLabelEl) return;
 
-  const base = [...angleList.querySelectorAll(".angleItem")];
-
-  // usa gli stessi dataset del tuo HTML (se ci sono), altrimenti fallback
+  const items = [...angleList.querySelectorAll(".angleItem")];
   const dragRatio = Number(angleList.dataset.dragSpeedRatio || 0.16);
   const speed = Number(angleList.dataset.speed || 380);
   const stepDeg = 26;
 
   let offset = 0;
-  let down = false;
-  let startX = 0;
-  let lastX = 0;
-  let snapping = false;
 
   const layout = () => {
     const w = angleStage.clientWidth;
@@ -96,8 +98,8 @@ angular
 
     let best = null;
 
-    base.forEach((el, i) => {
-      const idxCentered = i - Math.floor(base.length / 2);
+    items.forEach((el, i) => {
+      const idxCentered = i - Math.floor(items.length / 2);
       const a = idxCentered * stepDeg + offset;
       const rad = (a * Math.PI) / 180;
 
@@ -105,7 +107,6 @@ angular
       const y = cy + radius * (1 - Math.cos(rad));
 
       const dist = Math.abs(a);
-
       const t = clamp(1 - dist / (stepDeg * 2.2), 0, 1);
       const opacity = 0.22 + t * 0.78;
       const scale = 0.9 + t * 0.38;
@@ -118,7 +119,7 @@ angular
       if (!best || dist < best.dist) best = { el, dist };
     });
 
-    base.forEach((el) => el.classList.remove("is-active"));
+    items.forEach((el) => el.classList.remove("is-active"));
     if (best) {
       best.el.classList.add("is-active");
       centerLabelEl.textContent = best.el.dataset.label || "";
@@ -126,17 +127,39 @@ angular
   };
 
   const setDefault = (label) => {
-    const idx = base.findIndex((el) => (el.dataset.label || "") === label);
+    const idx = items.findIndex((el) => (el.dataset.label || "") === label);
     if (idx >= 0) {
-      const idxCentered = idx - Math.floor(base.length / 2);
+      const idxCentered = idx - Math.floor(items.length / 2);
       offset = -(idxCentered * stepDeg);
     }
   };
 
-  // default come prima: Forte
   setDefault("Forte");
   layout();
   window.addEventListener("resize", layout);
+
+  let down = false,
+    startX = 0,
+    lastX = 0;
+  let snapping = false;
+
+  const onDown = (e) => {
+    down = true;
+    angleStage.setPointerCapture(e.pointerId);
+    startX = e.clientX;
+    lastX = e.clientX;
+  };
+
+  const onMove = (e) => {
+    if (!down) return;
+    const dx = e.clientX - lastX;
+    lastX = e.clientX;
+
+    offset += -dx * dragRatio;
+    layout();
+
+    if (Math.abs(e.clientX - startX) > 10) e.preventDefault?.();
+  };
 
   const snap = () => {
     if (snapping) return;
@@ -161,24 +184,6 @@ angular
     };
 
     requestAnimationFrame(tick);
-  };
-
-  const onDown = (e) => {
-    down = true;
-    angleStage.setPointerCapture(e.pointerId);
-    startX = e.clientX;
-    lastX = e.clientX;
-  };
-
-  const onMove = (e) => {
-    if (!down) return;
-    const dx = e.clientX - lastX;
-    lastX = e.clientX;
-
-    offset += -dx * dragRatio;
-    layout();
-
-    if (Math.abs(e.clientX - startX) > 10) e.preventDefault?.();
   };
 
   const onUp = () => {
@@ -209,19 +214,14 @@ if (ringProg) {
 }
 
 const requiredIds = ["name", "company", "sector", "budget", "need", "email"];
-const requiredEls = requiredIds
-  .map((id) => document.getElementById(id))
-  .filter(Boolean);
+const requiredEls = requiredIds.map((id) => document.getElementById(id)).filter(Boolean);
 
 function isFilled(el) {
-  return ((el.value || "") + "").trim().length > 0;
+  return ((el.value || "").trim().length > 0);
 }
 
 function updateProgress() {
-  const filled = requiredEls.reduce(
-    (acc, el) => acc + (isFilled(el) ? 1 : 0),
-    0
-  );
+  const filled = requiredEls.reduce((acc, el) => acc + (isFilled(el) ? 1 : 0), 0);
   const total = requiredEls.length;
   const pct = total ? filled / total : 0;
 
@@ -236,83 +236,118 @@ requiredEls.forEach((el) => {
 updateProgress();
 
 /***********************
- * SUBMIT → GOOGLE APPS SCRIPT (FORM POST senza CORS)
- * - usa un form "vero" per evitare preflight/CORS su GitHub Pages
- * - lo Script deve leggere e.parameter (form-urlencoded) o JSON (se lo supporti)
+ * Submit -> GOOGLE APPS SCRIPT (NO CORS)
+ * - invia come vero form POST (application/x-www-form-urlencoded)
+ * - in iframe nascosto così NON cambi pagina
  ***********************/
+function collect() {
+  return {
+    name: document.getElementById("name")?.value.trim() || "",
+    company: document.getElementById("company")?.value.trim() || "",
+    sector: document.getElementById("sector")?.value.trim() || "",
+    brand: document.getElementById("centerLabel")?.textContent.trim() || "",
+    budget: document.getElementById("budget")?.value || "",
+    need: document.getElementById("need")?.value.trim() || "",
+    email: document.getElementById("email")?.value.trim() || "",
+  };
+}
+
+function valid(d) {
+  if (!d.name || !d.company || !d.sector || !d.brand || !d.budget || !d.need || !d.email) return false;
+  if (!/^\S+@\S+\.\S+$/.test(d.email)) return false;
+  return true;
+}
+
+function clearForm() {
+  const ids = ["name", "company", "sector", "budget", "need", "email"];
+  ids.forEach((id) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.value = "";
+  });
+}
+
+function submitViaHiddenForm(d) {
+  // iframe target
+  const iframeName = "hidden_submit_iframe";
+  let iframe = document.querySelector(`iframe[name="${iframeName}"]`);
+  if (!iframe) {
+    iframe = document.createElement("iframe");
+    iframe.name = iframeName;
+    iframe.style.display = "none";
+    document.body.appendChild(iframe);
+  }
+
+  // form
+  const form = document.createElement("form");
+  form.method = "POST";
+  form.action = FORM_ENDPOINT;
+  form.target = iframeName;
+
+  Object.keys(d).forEach((key) => {
+    const input = document.createElement("input");
+    input.type = "hidden";
+    input.name = key;          // <-- e.parameter[key] in Apps Script
+    input.value = d[key] ?? "";
+    form.appendChild(input);
+  });
+
+  document.body.appendChild(form);
+  form.submit();
+
+  // cleanup
+  setTimeout(() => form.remove(), 500);
+}
+
 if (submitBtn) {
   submitBtn.addEventListener("click", () => {
-    // reset status UI
     if (statusEl) {
       statusEl.textContent = "";
       statusEl.className = "status";
     }
 
-    // blocco se non completo (progress ring)
-    updateProgress();
-    if (submitBtn.disabled) {
+    const d = collect();
+
+    if (!valid(d)) {
       if (statusEl) {
-        statusEl.textContent = "Compila tutti i campi prima di inviare.";
+        statusEl.textContent = "Controlla: manca qualcosa (o email non valida).";
         statusEl.classList.add("err");
       }
       return;
     }
 
-    // prendi valori
-    const nameEl = document.getElementById("name");
-    const companyEl = document.getElementById("company");
-    const sectorEl = document.getElementById("sector");
-    const budgetEl = document.getElementById("budget");
-    const needEl = document.getElementById("need");
-    const emailEl = document.getElementById("email");
-    const centerLabel = document.getElementById("centerLabel");
-
-    const fields = {
-      name: (nameEl?.value || "").trim(),
-      company: (companyEl?.value || "").trim(),
-      sector: (sectorEl?.value || "").trim(),
-      brand: (centerLabel?.textContent || "").trim(),
-      budget: (budgetEl?.value || "").trim(),
-      need: (needEl?.value || "").trim(),
-      email: (emailEl?.value || "").trim(),
-    };
-
-    // validazione email base
-    if (!/^\S+@\S+\.\S+$/.test(fields.email)) {
+    if (!FORM_ENDPOINT.startsWith("https://script.google.com/macros/s/")) {
       if (statusEl) {
-        statusEl.textContent = "Email non valida.";
+        statusEl.textContent = "Endpoint non valido (serve URL Apps Script /exec).";
         statusEl.classList.add("err");
       }
       return;
     }
 
-    // invio via form post (no CORS, nessun fetch)
-    const form = document.createElement("form");
-    form.method = "POST";
-    form.action = FORM_ENDPOINT;
-    form.target = "_self"; // resta sulla pagina (Apps Script risponde JSON/testo)
-
-    // IMPORTANTISSIMO: forza form-urlencoded
-    form.enctype = "application/x-www-form-urlencoded";
-
-    for (const key in fields) {
-      const input = document.createElement("input");
-      input.type = "hidden";
-      input.name = key;
-      input.value = fields[key];
-      form.appendChild(input);
-    }
-
-    document.body.appendChild(form);
-
-    // UI feedback (non possiamo leggere response senza CORS)
+    // blocca click multipli
     submitBtn.disabled = true;
-    if (statusEl) {
-      statusEl.textContent = "Invio in corso...";
-      statusEl.classList.remove("err");
-      statusEl.classList.remove("ok");
-    }
 
-    form.submit();
+    try {
+      submitViaHiddenForm(d);
+
+      // Non possiamo leggere la risposta (cross-origin), quindi conferma “ottimistica”
+      if (statusEl) {
+        statusEl.textContent = "Inviato! (se non arriva, controlla Deploy Apps Script: 'Chiunque').";
+        statusEl.classList.add("ok");
+      }
+
+      clearForm();
+      updateProgress();
+
+      // riabilita dopo un attimo
+      setTimeout(() => updateProgress(), 600);
+
+    } catch (e) {
+      if (statusEl) {
+        statusEl.textContent = "Errore. Riprova.";
+        statusEl.classList.add("err");
+      }
+      updateProgress();
+    }
   });
 }
