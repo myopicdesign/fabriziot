@@ -282,60 +282,30 @@ async function send(d){
 }
 
 
-if (submitBtn) {
-  submitBtn.addEventListener("click", async () => {
-    if (statusEl) {
-      statusEl.textContent = "";
-      statusEl.className = "status";
-    }
+submitBtn.addEventListener("click", () => {
+  const form = document.createElement("form");
+  form.method = "POST";
+  form.action = FORM_ENDPOINT;
 
-    const d = collect();
+  const fields = {
+    name: document.getElementById("name").value,
+    company: document.getElementById("company").value,
+    sector: document.getElementById("sector").value,
+    brand: document.getElementById("centerLabel").textContent,
+    budget: document.getElementById("budget").value,
+    need: document.getElementById("need").value,
+    email: document.getElementById("email").value
+  };
 
-    if(!valid(d)){
-      if (statusEl) {
-        statusEl.textContent = "Controlla: manca qualcosa (o email non valida).";
-        statusEl.classList.add("err");
-      }
-      return;
-    }
+  for (const key in fields) {
+    const input = document.createElement("input");
+    input.type = "hidden";
+    input.name = key;
+    input.value = fields[key];
+    form.appendChild(input);
+  }
 
-   if(!FORM_ENDPOINT.startsWith("https://")){
-  statusEl.textContent = "Endpoint non valido.";
-  statusEl.classList.add("err");
-  return;
-}
+  document.body.appendChild(form);
+  form.submit();
+});
 
-    submitBtn.disabled = true;
-
-    try{
-      const ok = await send(d);
-      if(ok){
-        if (statusEl) {
-          statusEl.textContent = "Inviato! Ti risponderò a breve.";
-          statusEl.classList.add("ok");
-        }
-
-        document.getElementById("name").value = "";
-        document.getElementById("company").value = "";
-        document.getElementById("sector").value = "";
-        document.getElementById("budget").value = "";
-        document.getElementById("need").value = "";
-        document.getElementById("email").value = "";
-
-        updateProgress();
-      } else {
-        if (statusEl) {
-          statusEl.textContent = "Errore nell’invio. Riprova tra poco.";
-          statusEl.classList.add("err");
-        }
-        updateProgress();
-      }
-    } catch(e){
-      if (statusEl) {
-        statusEl.textContent = "Errore di rete. Riprova.";
-        statusEl.classList.add("err");
-      }
-      updateProgress();
-    }
-  });
-}
