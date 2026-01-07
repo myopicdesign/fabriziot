@@ -273,9 +273,8 @@ function mailText(d){
 async function send(d){
   const res = await fetch(FORM_ENDPOINT, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
+  mode: "no-cors"
+
     body: JSON.stringify(d)
   });
   return res.ok;
