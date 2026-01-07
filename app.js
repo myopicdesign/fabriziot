@@ -2,7 +2,7 @@
  * FORM_ENDPOINT (GOOGLE APPS SCRIPT WEB APP /exec)
  ***********************/
 const FORM_ENDPOINT =
-  "https://script.google.com/macros/s/AKfycbw2BWkNpueif2Myy0odSraxu9srG2ZGT3s_HB_RMtWVs31bf-ob5ITv6bq2pXxSH3CPNg/exec";
+  "https://script.google.com/macros/s/AKfycbxy8L30jPkHV_pqwg1bSuh2sOuagebf8G2KhwoXoJd73fkvFLcFWBWWDmnDaCDyGvk_4A/exec";
 
 /***********************
  * Helpers
