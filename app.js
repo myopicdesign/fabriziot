@@ -1,7 +1,7 @@
 /***********************
  * FORM_ENDPOINT
  ***********************/
-const FORM_ENDPOINT = "https://script.google.com/macros/s/AKfycbw2BWkNpueif2Myy0odSraxu9srG2ZGT3s_HB_RMtWVs31bf-ob5ITv6bq2pXxSH3CPNg/exec";
+const FORM_ENDPOINT = "https://script.google.com/macros/s/AKfycbwhMzJfHoUG57c4ZCjofw19qCZv-WdQUeO6ZJghrVmETxii08_f7RfR2XwSYKCWv_Q-Fg/exec";
  // <-- metti qui il tuo
 
 /***********************
