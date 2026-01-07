@@ -1,7 +1,7 @@
 /***********************
  * FORM_ENDPOINT
  ***********************/
-const FORM_ENDPOINT = "https://formspree.io/f/XXXXYYYY"; // <-- metti qui il tuo
+const FORM_ENDPOINT = "https://formspree.io/f/xwvpgook"; // <-- metti qui il tuo
 
 /***********************
  * Helpers
