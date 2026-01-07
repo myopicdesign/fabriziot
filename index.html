@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+
   <title>Contatto</title>
 
   <!-- Ionic + Tinder Cards (CDN) -->
@@ -29,6 +30,7 @@
         Questo link non sarà sempre disponibile. Se lo stai vedendo oggi, non è un caso.
       </p>
 
+      <!-- TINDER CARDS -->
       <div class="deckWrap">
         <td-cards>
           <td-card
@@ -58,6 +60,7 @@
     <!-- FORM UI -->
     <main>
       <form
+        id="contactForm"
         action="https://script.google.com/macros/s/AKfycbxy8L30jPkHV_pqwg1bSuh2sOuagebf8G2KhwoXoJd73fkvFLcFWBWWDmnDaCDyGvk_4A/exec"
         method="POST"
       >
@@ -102,7 +105,7 @@
 
             <div class="centerLabel" id="centerLabel">Forte</div>
             <input type="hidden" name="brand" id="brandHidden" value="Forte">
-            
+
             <svg class="semiDecor" viewBox="0 0 1000 520" preserveAspectRatio="none" aria-hidden="true">
               <path d="M 40 500 A 460 460 0 0 1 960 500"
                     fill="none" stroke="rgba(255,155,95,.35)" stroke-width="20" stroke-linecap="round"/>
@@ -172,7 +175,8 @@
                 <circle class="ringBg" cx="60" cy="60" r="52"></circle>
                 <circle class="ringProg" cx="60" cy="60" r="52"></circle>
               </svg>
-              <button class="btn" type="submit" aria-label="Invia">➜</button>
+
+              <button class="btn" id="submitBtn" type="submit" aria-label="Invia">➜</button>
             </div>
           </div>
 
@@ -199,6 +203,7 @@
 
   <script src="./app.js"></script>
 
+  <!-- aggiorna hidden brand per submit -->
   <script>
     const label = document.getElementById("centerLabel");
     const hidden = document.getElementById("brandHidden");
