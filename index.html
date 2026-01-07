@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="it" ng-app="starter">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+
+  <title>Contatto</title>
+
+  <!-- Ionic + Tinder Cards (CDN) -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/1.0.0-beta.14/css/ionic.css">
+  <link rel="stylesheet" href="https://code.ionicframework.com/contrib/ionic-contrib-tinder-cards/ionic.tdcards.css">
+
+  <!-- TUO CSS -->
+  <link rel="stylesheet" href="./styles.css">
+</head>
+
+<body no-scroll ng-controller="CardsCtrl">
+  <div class="app">
+
+    <!-- HEADER UI -->
+    <header class="top">
+      <div class="hey">Hey,</div>
+      <h1 class="welcome">Benvenuto!</h1>
+
+      <!-- ✅ MODIFICA 1: HERO full-width al posto dell'avatar -->
+      <div class="hero" aria-hidden="true">
+        <img src="assets/img/hero.png" alt="">
+      </div>
+
+      <p class="microcopy">
+        Questo link non sarà sempre disponibile. Se lo stai vedendo oggi, non è un caso.
+      </p>
+
+      <!-- TINDER CARDS (Ionic contrib) -->
+      <div class="deckWrap">
+        <td-cards>
+          <td-card
+            ng-repeat="card in cards"
+            on-destroy="cardDestroyed($index)"
+            on-swipe-left="cardSwipedLeft($index)"
+            on-swipe-right="cardSwipedRight($index)"
+            on-partial-swipe="cardPartialSwipe(amt)"
+            class="card-{{$index}}"
+            ng-click="openCard(card)">
+
+            <div class="image">
+              <img ng-src="{{card.image}}" alt="">
+              <div class="shade"></div>
+            </div>
+
+           
+          </td-card>
+        </td-cards>
+      </div>
+
+      <div class="deckHelp" aria-hidden="true">
+        <span>👆 Tap = apri</span>
+        <span>👉 Swipe = scarta</span>
+      </div>
+
+
+    </header>
+
+    <!-- FORM UI -->
+    <main>
+      <div class="section">
+        <h2>Approfittane ora!</h2>
+        <p class="sub">Compila e ti rispondo via mail.</p>
+
+        <div class="field">
+          <div class="label">Il tuo Nome</div>
+          <input id="name" autocomplete="name" placeholder="Digita il tuo nome qui..." />
+        </div>
+
+        <div class="field">
+          <div class="label">Nome Azienda</div>
+          <input id="company" autocomplete="organization" placeholder="Digita il nome qui..." />
+        </div>
+
+        <div class="field">
+          <div class="label">Di cosa si occupa</div>
+          <input id="sector" placeholder="Es. pulizia scarpe, e-commerce, ristorante..." />
+        </div>
+      </div>
+
+      <!-- SLIDER EMOJI (APPROVATO) -->
+      <div class="section">
+        <div class="brandHead">
+          <div class="brandTitle">Come reputi<br>il tuo brand oggi?</div>
+          <div class="brandSub">Indica un livello</div>
+        </div>
+
+        <div class="angleStage" id="angleStage">
+          <div class="angleList" id="angleList" data-speed="380" data-drag-speed-ratio="0.16">
+            <div class="angleItem" data-label="Debole">🫠</div>
+            <div class="angleItem" data-label="Malato">🤒</div>
+            <div class="angleItem" data-label="Forte">🧐</div>
+            <div class="angleItem" data-label="Ricco">🤑</div>
+            <div class="angleItem" data-label="Timido">🤭</div>
+          </div>
+
+          <div class="centerLabel" id="centerLabel">Forte</div>
+
+          <svg class="semiDecor" viewBox="0 0 1000 520" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M 40 500 A 460 460 0 0 1 960 500"
+                  fill="none" stroke="rgba(255,155,95,.35)" stroke-width="20" stroke-linecap="round"/>
+            <path d="M 78 500 A 422 422 0 0 1 922 500"
+                  fill="none" stroke="rgba(255,155,95,.75)" stroke-width="16" stroke-dasharray="12 20" stroke-linecap="butt"/>
+            <circle cx="500" cy="40" r="16" fill="rgba(255,155,95,.85)"/>
+            <circle cx="500" cy="190" r="10" fill="rgba(255,155,95,.55)"/>
+          </svg>
+        </div>
+
+        <div class="brandFoot">Non ti sto giudicando, mi serve per aiutarti!</div>
+      </div>
+
+      <!-- SEZIONE LOGHI (NUOVA) -->
+      <div class="section">
+        <h2>Sai, ho lavorato con i più grandi</h2>
+        <p class="sub">Ora quelle competenze le voglio mettere a disposizione della tua azienda!</p>
+
+        <div class="logosWrap">
+          <img src="assets/img/clienti.png" alt="Clienti">
+        </div>
+
+      </div>
+
+      <div class="section">
+        <h2>Indica il tuo Budget</h2>
+        <p class="sub">Scegli un range.</p>
+
+        <div class="field">
+          <div class="label">Budget</div>
+          <select id="budget">
+            <option value="" selected disabled>Scegli un range</option>
+            <option>0–1k</option>
+            <option>1k–3k</option>
+            <option>3k–5k</option>
+            <option>5k–10k</option>
+            <option>10k–15k</option>
+            <option>15k–25k</option>
+            <option>25k+</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <div class="label">Di cosa hai bisogno?</div>
+          <textarea id="need" placeholder="Es. realizzare campagna social kit 200 immagini..."></textarea>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Ok ci siamo quasi!</h2>
+        <div class="graphImg">
+          <!-- ✅ MODIFICA 2: grafico locale -->
+          <img src="assets/img/grafico.png" alt="Grafico">
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Abbiamo finito!</h2>
+        <p class="sub">Ti risponderò via mail. Nei prossimi giorni 
+            controlla anche spam/promozioni.</p>
+
+        <div class="field">
+          <div class="label">Indica la tua eMail</div>
+          <input id="email" type="email" autocomplete="email" placeholder="Digita la tua email" />
+        </div>
+
+        <div class="cta">
+          <div class="btnWrap">
+            <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
+              <circle class="ringBg" cx="60" cy="60" r="52"></circle>
+              <circle class="ringProg" cx="60" cy="60" r="52"></circle>
+            </svg>
+
+            <button class="btn" id="submitBtn" aria-label="Invia">➜</button>
+          </div>
+        </div>
+
+        <div class="status" id="status"></div>
+      </div>
+
+      <div class="safeBottom"></div>
+    </main>
+  </div>
+
+  <!-- LIGHTBOX (tap sulle cards) -->
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <div class="frame" role="dialog" aria-modal="true">
+      <button class="close" id="lbClose" aria-label="Chiudi">✕</button>
+      <img id="lbImg" alt="">
+    </div>
+  </div>
+
+  <!-- JS (ordine come reference) -->
+  <script src="https://code.ionicframework.com/collide/0.0.4/collide.js"></script>
+  <script src="https://code.ionicframework.com/1.0.0-beta.14/js/ionic.bundle.js"></script>
+  <script src="https://code.ionicframework.com/contrib/ionic-contrib-tinder-cards/ionic.tdcards.js"></script>
+
+  <!-- TUO JS -->
+  <script src="./app.js"></script>
+</body>
+</html>
