@@ -138,9 +138,7 @@ angular
   layout();
   window.addEventListener("resize", layout);
 
-  let down = false,
-    startX = 0,
-    lastX = 0;
+  let down = false, startX = 0, lastX = 0;
   let snapping = false;
 
   const onDown = (e) => {
@@ -199,8 +197,9 @@ angular
 })();
 
 /***********************
- * Progress ring sul bottone (compilazione campi)
+ * Progress ring + disable submit until filled
  ***********************/
+const formEl = document.getElementById("contactForm");
 const submitBtn = document.getElementById("submitBtn");
 const statusEl = document.getElementById("status");
 const ringProg = document.querySelector(".ringProg");
@@ -236,16 +235,14 @@ requiredEls.forEach((el) => {
 updateProgress();
 
 /***********************
- * Submit -> GOOGLE APPS SCRIPT (NO CORS)
- * - invia come vero form POST (application/x-www-form-urlencoded)
- * - in iframe nascosto così NON cambi pagina
+ * Submit via hidden form + iframe (no redirect)
  ***********************/
 function collect() {
   return {
     name: document.getElementById("name")?.value.trim() || "",
     company: document.getElementById("company")?.value.trim() || "",
     sector: document.getElementById("sector")?.value.trim() || "",
-    brand: document.getElementById("centerLabel")?.textContent.trim() || "",
+    brand: document.getElementById("brandHidden")?.value.trim() || "", // usa hidden aggiornato
     budget: document.getElementById("budget")?.value || "",
     need: document.getElementById("need")?.value.trim() || "",
     email: document.getElementById("email")?.value.trim() || "",
@@ -259,16 +256,21 @@ function valid(d) {
 }
 
 function clearForm() {
-  const ids = ["name", "company", "sector", "budget", "need", "email"];
+  const ids = ["name", "company", "sector", "need", "email"];
   ids.forEach((id) => {
     const el = document.getElementById(id);
-    if (!el) return;
-    el.value = "";
+    if (el) el.value = "";
   });
+
+  const budgetEl = document.getElementById("budget");
+  if (budgetEl) budgetEl.value = "";
+
+  // reset brand hidden (opzionale)
+  const brandHidden = document.getElementById("brandHidden");
+  if (brandHidden) brandHidden.value = (document.getElementById("centerLabel")?.textContent || "Forte").trim();
 }
 
 function submitViaHiddenForm(d) {
-  // iframe target
   const iframeName = "hidden_submit_iframe";
   let iframe = document.querySelector(`iframe[name="${iframeName}"]`);
   if (!iframe) {
@@ -278,7 +280,6 @@ function submitViaHiddenForm(d) {
     document.body.appendChild(iframe);
   }
 
-  // form
   const form = document.createElement("form");
   form.method = "POST";
   form.action = FORM_ENDPOINT;
@@ -287,20 +288,20 @@ function submitViaHiddenForm(d) {
   Object.keys(d).forEach((key) => {
     const input = document.createElement("input");
     input.type = "hidden";
-    input.name = key;          // <-- e.parameter[key] in Apps Script
+    input.name = key;
     input.value = d[key] ?? "";
     form.appendChild(input);
   });
 
   document.body.appendChild(form);
   form.submit();
-
-  // cleanup
   setTimeout(() => form.remove(), 500);
 }
 
-if (submitBtn) {
-  submitBtn.addEventListener("click", () => {
+if (formEl) {
+  formEl.addEventListener("submit", (e) => {
+    e.preventDefault(); // ✅ non vai sulla pagina Apps Script
+
     if (statusEl) {
       statusEl.textContent = "";
       statusEl.className = "status";
@@ -316,33 +317,21 @@ if (submitBtn) {
       return;
     }
 
-    if (!FORM_ENDPOINT.startsWith("https://script.google.com/macros/s/")) {
-      if (statusEl) {
-        statusEl.textContent = "Endpoint non valido (serve URL Apps Script /exec).";
-        statusEl.classList.add("err");
-      }
-      return;
-    }
-
     // blocca click multipli
-    submitBtn.disabled = true;
+    if (submitBtn) submitBtn.disabled = true;
 
     try {
       submitViaHiddenForm(d);
 
-      // Non possiamo leggere la risposta (cross-origin), quindi conferma “ottimistica”
       if (statusEl) {
-        statusEl.textContent = "Inviato! (se non arriva, controlla Deploy Apps Script: 'Chiunque').";
+        statusEl.textContent = "Inviato! ✅ Ti risponderò via mail.";
         statusEl.classList.add("ok");
       }
 
       clearForm();
-      updateProgress();
+      updateProgress(); // ring torna a 0 e bottone torna disabilitato
 
-      // riabilita dopo un attimo
-      setTimeout(() => updateProgress(), 600);
-
-    } catch (e) {
+    } catch (err) {
       if (statusEl) {
         statusEl.textContent = "Errore. Riprova.";
         statusEl.classList.add("err");
