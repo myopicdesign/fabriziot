@@ -1,7 +1,8 @@
 /***********************
  * FORM_ENDPOINT
  ***********************/
-const FORM_ENDPOINT = "https://formspree.io/f/xwvpgook"; // <-- metti qui il tuo
+const FORM_ENDPOINT = "https://script.google.com/macros/s/AKfycbw2BWkNpueif2Myy0odSraxu9srG2ZGT3s_HB_RMtWVs31bf-ob5ITv6bq2pXxSH3CPNg/exec";
+ // <-- metti qui il tuo
 
 /***********************
  * Helpers
@@ -270,21 +271,10 @@ function mailText(d){
 }
 
 async function send(d){
-  const fd = new FormData();
-  fd.append("nome", d.name);
-  fd.append("azienda", d.company);
-  fd.append("settore", d.sector);
-  fd.append("reputazione_brand", d.brand);
-  fd.append("budget", d.budget);
-  fd.append("richiesta", d.need);
-  fd.append("email", d.email);
-  fd.append("messaggio_formattato", mailText(d));
-  fd.append("_subject", `Nuova richiesta — ${d.company}`);
-
   const res = await fetch(FORM_ENDPOINT, {
     method: "POST",
-    headers: { "Accept": "application/json" },
-    body: fd
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(d)
   });
   return res.ok;
 }
