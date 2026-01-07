@@ -273,11 +273,14 @@ function mailText(d){
 async function send(d){
   const res = await fetch(FORM_ENDPOINT, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json"
+    },
     body: JSON.stringify(d)
   });
   return res.ok;
 }
+
 
 if (submitBtn) {
   submitBtn.addEventListener("click", async () => {
@@ -296,13 +299,11 @@ if (submitBtn) {
       return;
     }
 
-    if(!FORM_ENDPOINT.includes("formspree.io")){
-      if (statusEl) {
-        statusEl.textContent = "Inserisci prima il tuo endpoint (FORM_ENDPOINT).";
-        statusEl.classList.add("err");
-      }
-      return;
-    }
+   if(!FORM_ENDPOINT.startsWith("https://")){
+  statusEl.textContent = "Endpoint non valido.";
+  statusEl.classList.add("err");
+  return;
+}
 
     submitBtn.disabled = true;
 
