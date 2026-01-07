@@ -1,0 +1,448 @@
+:root{
+  --max: 420px;
+  --px: 18px;
+
+  --ink:#0b0b0b;
+  --muted: rgba(0,0,0,.45);
+
+  --bg1:#f6f2ff;
+  --bg2:#ffe8f0;
+  --bg3:#fff3dc;
+
+  --shadow: 0 22px 50px rgba(0,0,0,.16);
+  --shadow2: 0 16px 36px rgba(0,0,0,.12);
+
+  --blue: #3a7dff;
+  --pink: #ff4fd8;
+}
+
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: var(--ink);
+  background: #fefef8;
+  overflow-x:hidden;
+}
+
+/* blocco scroll come demo */
+body, html { overflow: hidden; }
+
+.app{
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 18px var(--px) 56px;
+  height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ===== Header ===== */
+.top{ text-align:center; padding-top: 8px; }
+.hey{
+  font-family: ui-serif, Georgia, "Times New Roman", serif;
+    font-style: italic;
+    font-size: 35px;
+   line-height: 0.4;
+    margin: 6px 0 0;
+    font-weight: bold;
+}
+.welcome{
+  margin:0;
+  font-weight:900;
+  font-size: 38px;
+  line-height:1;
+  background: linear-gradient(90deg,var(--blue),var(--pink));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color: transparent;
+}
+
+/* ✅ HERO full width (nuovo) */
+.hero{
+  width: 100%;
+  margin: 18px auto 14px;
+}
+.hero img{
+  width: 100%;
+  height: auto;
+  display:block;
+}
+
+/* microcopy sotto hero */
+.microcopy{
+  margin: 10px auto 12px;
+  max-width: 320px;
+  font-size: 12px;
+  color: rgba(0,0,0,.45);
+  line-height: 1.35;
+}
+
+/* ===== Tinder Cards (Ionic contrib) ===== */
+.deckWrap{ position:relative; height:260px; margin:10px 0 12px; }
+td-cards{ display:block; height: 260px; }
+
+td-card{
+  position:absolute;
+  left: 50%;
+  margin-top: 0;
+  margin-left: -160px;
+  width: 320px;
+  height: 340px;
+  border-radius: 26px;
+  overflow:hidden;
+
+  border: 1px solid rgba(0,0,0,.12);
+  box-shadow: var(--shadow);
+  background:#000;
+}
+
+/* STACK SFALSATO (3 visibili) */
+td-card.card-0 { transform: translate3d(6px, 14px, 0) rotate(-1.2deg); z-index: 8; }
+td-card.card-1 { transform: translate3d(3px,  7px, 0) rotate( 0.6deg); z-index: 9; }
+td-card.card-2 { transform: translate3d(0px,  0px, 0) rotate( 0deg);  z-index: 10; }
+
+td-card .image{ position:relative; width:100%; height:100%; }
+td-card img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+td-card .shade{
+  position:absolute; left:0; right:0; bottom:0;
+  height: 60%;
+  background: linear-gradient(to top, rgba(0,0,0,.55), rgba(0,0,0,0));
+  pointer-events:none;
+}
+
+/* like/nope demo */
+.yes-text, .no-text{
+  position:absolute;
+  bottom: 12px;
+  font-size: 18px;
+  font-weight: 900;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(0,0,0,.35);
+  border: 1px solid rgba(255,255,255,.22);
+  color:#fff;
+}
+.yes-text{ left: 12px; }
+.no-text{ right: 12px; }
+.fade{ transition: .2s opacity linear; opacity: 0; }
+
+.deckHelp{
+  display:flex; justify-content:center; gap: 10px;
+  font-size: 12px; color: rgba(0,0,0,.45);
+ margin: 120px 0 18px;
+}
+.deckHelp span{
+  background: rgba(255,255,255,.55);
+  border: 1px solid rgba(0,0,0,.06);
+  padding: 6px 10px;
+  border-radius: 999px;
+}
+.arrowDown{ text-align:center; font-size: 22px; opacity:.65; margin: 0 0 8px; }
+
+/* ===== Sections ===== */
+.section{ padding: 4px 0; margin: 22px 0; }
+
+/* titoli centrati */
+.section h2,
+.section .sub{
+  text-align:center;
+}
+.section .sub{
+  margin-left:auto;
+  margin-right:auto;
+  margin-top: 20px;
+  max-width: 340px;
+}
+
+h2{
+  margin: 0 0 8px;
+    font-size: 30px;
+    line-height: 0.6;
+    font-weight: 900;
+    letter-spacing: -.05em;
+}
+.sub{
+  margin:0 0 14px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.field{ margin: 16px 0; }
+.label{ font-weight: 800; font-size: 12px; margin-bottom: 10px; text-align:left; }
+
+input, textarea, select{
+  width:100%;
+  border: none;
+  border-bottom: 1px solid rgba(0,0,0,.18);
+  background: transparent;
+  padding: 10px 2px 12px;
+  outline:none;
+  font-size: 15px;
+  color: var(--ink);
+}
+textarea{
+  min-height: 96px;
+  resize: vertical;
+  border: 1px solid rgba(0,0,0,.14);
+  border-radius: 14px;
+  padding: 12px 12px;
+  /*background: rgba(255,255,255,.35);*/
+}
+select{
+  /*border: 1px solid rgba(0,0,0,.14);*/
+  /*border-radius: 14px;*/
+  padding: 12px 12px;
+ /* background: rgba(255,255,255,.35);*/
+}
+
+/* ===== Brand head ===== */
+.brandHead{ text-align:center; }
+.brandTitle{
+  font-weight: 900;
+  font-size: 30px;
+  line-height: 1.02;
+  letter-spacing: -.03em;
+}
+.brandSub{
+  margin-top: 10px;
+  font-style: normal;
+  color: rgba(0,0,0,.45);
+}
+
+/* ===== Emoji Rotary Slider (APPROVATO) ===== */
+.angleStage{
+  position: relative;
+  height: 420px;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+.angleStage::before,
+.angleStage::after{
+  content:"";
+  position:absolute;
+  top:0; bottom:0;
+  width: 56px;
+  z-index: 6;
+  pointer-events:none;
+}
+.angleStage::before{
+  left:0;
+  background:linear-gradient(90deg, rgb(254 254 248 / 95%), rgba(255, 240, 240, 0));
+}
+.angleStage::after{
+  right:0;
+  background: linear-gradient(270deg, rgba(254,254,248,.95), rgba(255,240,240,0));
+}
+.angleList{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+.angleItem{
+  position: absolute;
+  width: 66px;
+  height: 66px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size: 46px;
+  line-height: 1;
+  user-select:none;
+  transform-origin: center center;
+  filter: drop-shadow(0 14px 16px rgba(0,0,0,.10));
+  cursor: grab;
+  will-change: transform, opacity;
+}
+.centerLabel{
+  position:absolute;
+  left:50%;
+  top: 150px;
+  transform: translateX(-50%);
+  padding: 4px 11px;
+  border-radius: 12px;
+  background: rgba(255,255,255,.78);
+  border: 1px solid rgba(0,0,0,.10);
+  box-shadow: 0 12px 24px rgba(0,0,0,.12);
+  font-weight: 900;
+  font-size: 12px;
+  pointer-events:none;
+  z-index: 7;
+}
+.semiDecor{
+  position:absolute;
+  left:50%;
+  top: 172px;
+  transform: translateX(-50%);
+  width: 126%;
+  max-width: 700px;
+  /*height: 320px;*/
+  pointer-events:none;
+  z-index: 1;
+}
+.brandFoot{
+  text-align:center;
+  font-style: italic;
+  color: rgba(0,0,0,.45);
+  margin-top: 8px;
+}
+
+/* ===== Loghi ===== */
+.logosWrap{
+  margin-top: 10px;
+  width: 100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+.logosWrap img{
+  width: 100%;
+  max-width: 360px;
+  height: auto;
+  opacity: .55;
+}
+
+.continueHint{
+  margin-top: 24px;
+  text-align:center;
+  color: rgba(0,0,0,.35);
+}
+.continueText{
+  font-size: 18px;
+  /*font-weight: 800;*/
+}
+.continueEmoji{
+  font-size: 34px;
+  margin-top: 6px;
+}
+
+/* ===== Graph placeholder ===== */
+.graphImg{
+  width:100%;
+  margin-top: 10px;
+}
+
+.graphImg img{
+  width:100%;
+  height:auto;
+  display:block;
+  border:none;
+  background:none;
+  box-shadow:none;
+    padding-top: 40px;
+}
+
+/* ===== Submit + ring progress ===== */
+.cta{ display:flex; justify-content:center; margin-top: 14px; }
+
+.btnWrap{
+  position: relative;
+  width: 90px;
+  height: 90px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.btn{
+  width: 76px;
+  height: 76px;
+  border-radius: 999px;
+  border:none;
+  background:#111;
+  color:#fff;
+  font-size: 22px;
+  font-weight: 900;
+  box-shadow: 0 18px 36px rgba(0,0,0,.20);
+  cursor:pointer;
+  position: relative;
+  z-index: 2;
+}
+
+.ring{
+  position:absolute;
+  inset: 0;
+  z-index: 1;
+  transform: rotate(-90deg);
+}
+
+.ringBg{
+  fill: none;
+  stroke: rgba(255,155,95,.25);
+  stroke-width: 6;
+}
+
+.ringProg{
+  fill: none;
+  stroke: rgba(255,155,95,.85);
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-dasharray: 0 9999;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset .35s ease;
+}
+
+.btn:disabled{ opacity: .03; cursor:not-allowed; }
+
+.status{
+  text-align:center;
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 900;
+}
+.ok{ color:#0f7a3a; }
+.err{ color:#b3001b; }
+
+/* ===== Lightbox ===== */
+.lightbox{
+  position: fixed;
+  inset: 0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background: rgba(0,0,0,.70);
+  padding: 18px;
+  z-index: 999;
+}
+.lightbox.open{ display:flex; }
+.frame{
+  width: min(96vw, 520px);
+  max-height: 86vh;
+  border-radius: 22px;
+  overflow:hidden;
+  background:#000;
+  position: relative;
+  border: 1px solid rgba(255,255,255,.18);
+  box-shadow: 0 20px 60px rgba(0,0,0,.55);
+}
+.frame img{
+  width:100%;
+  height:100%;
+  max-height: 86vh;
+  object-fit: contain;
+  display:block;
+  background:#000;
+}
+.close{
+  position:absolute;
+  top: 10px;
+  right: 10px;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(0,0,0,.35);
+  color:#fff;
+  font-size: 18px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  backdrop-filter: blur(8px);
+}
+
+.safeBottom{ height: env(safe-area-inset-bottom); }
